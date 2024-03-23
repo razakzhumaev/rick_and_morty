@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rick_morty_app/internal/components/app_routes.dart';
+import 'package:rick_morty_app/internal/components/text_helper.dart';
 import 'package:rick_morty_app/internal/helpers/snack_bar.dart';
 
 class CreateAccountScreen extends StatefulWidget {
@@ -64,7 +66,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         password: passwordTextInputController.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
-      print(e.code);
       if (e.code == 'email-already-in-use') {
         SnackBarService.showSnackBar(
           context,
@@ -81,7 +82,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         return;
       }
     }
-    context.push('/splash2/stream/auth/signup/verify_email');
+    context.push(RouterConstants.verifyEmail);
   }
 
   @override
@@ -102,22 +103,21 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Создать аккаунт',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 34,
-                  ),
+                  style: TextHelper.w700s34,
                 ),
                 SizedBox(height: 40.h),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
                   controller: emailTextInputController,
-                  validator: (email) =>
-                      email != null && !EmailValidator.validate(email)
-                          ? 'Введите правильный Email'
-                          : null,
+                  validator: (email) {
+                    email != null && !EmailValidator.validate(email)
+                        ? 'Введите правильный Email'
+                        : null;
+                    return null;
+                  },
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Введите Email',
@@ -143,7 +143,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       ),
                     ),
                     hintText: 'Пароль',
-                    hintStyle: const TextStyle(fontWeight: FontWeight.w300),
+                    hintStyle: TextHelper.w300,
                     filled: true,
                     fillColor: Colors.grey[200],
                     enabledBorder: OutlineInputBorder(
@@ -151,7 +151,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
                 ),
@@ -160,9 +160,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   autocorrect: false,
                   controller: passwordTextRepeatInputController,
                   obscureText: isHiddenPassword,
-                  validator: (value) => value != null && value.length < 6
-                      ? 'Минимум 6 символов'
-                      : null,
+                  validator: (value) {
+                    value != null && value.length < 6
+                        ? 'Минимум 6 символов'
+                        : null;
+                    return null;
+                  },
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     suffix: InkWell(
@@ -175,7 +178,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       ),
                     ),
                     hintText: 'Пароль',
-                    hintStyle: const TextStyle(fontWeight: FontWeight.w300),
+                    hintStyle: const TextStyle(
+                      fontWeight: FontWeight.w300,
+                    ),
                     filled: true,
                     fillColor: Colors.grey[200],
                     enabledBorder: OutlineInputBorder(
@@ -183,7 +188,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
                 ),
@@ -194,8 +199,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   width: 319.w,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      foregroundColor: const MaterialStatePropertyAll(Colors.white),
-                      backgroundColor: const MaterialStatePropertyAll(Colors.blue),
+                      foregroundColor:
+                          const MaterialStatePropertyAll(Colors.white),
+                      backgroundColor:
+                          const MaterialStatePropertyAll(Colors.blue),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.r),

@@ -3,14 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_morty_app/features/persons/data/model/person_model.dart';
 import 'package:rick_morty_app/features/persons/data/repository/person_repository_impl.dart';
 import 'package:rick_morty_app/features/persons/domain/use_case/person_use_case.dart';
 import 'package:rick_morty_app/features/persons/presentation/person_bloc/bloc/person_bloc.dart';
-import 'package:rick_morty_app/features/persons/presentation/screens/person_detail_screen.dart';
-import 'package:rick_morty_app/features/search_screen/widgets/widgets.dart';
+import 'package:rick_morty_app/internal/components/textfields.dart';
+import 'package:rick_morty_app/generated/l10n.dart';
+import 'package:rick_morty_app/internal/components/app_routes.dart';
 import 'package:rick_morty_app/internal/components/theme_provider.dart';
 import 'package:rick_morty_app/internal/helpers/utils.dart';
 
@@ -83,7 +85,6 @@ class _PersonScreenState extends State<PersonScreen> {
                 ));
               },
               hintText: 'Найти персонажа',
-              suffixIcon: const Icon(Icons.flashlight_on_outlined),
             ),
             SizedBox(height: 24.h),
             SingleChildScrollView(
@@ -94,9 +95,7 @@ class _PersonScreenState extends State<PersonScreen> {
                     if (state.isSearch) {
                       personList.clear();
                     }
-
                     personList.addAll(state.personResult.results ?? []);
-
                     isLoading = false;
                   }
                   if (state is PersonErrorState) {
@@ -110,14 +109,12 @@ class _PersonScreenState extends State<PersonScreen> {
                   }
                 },
                 builder: (context, state) {
-                  print('state is $state');
-
+                  debugPrint('state is $state');
                   if (state is PersonLoadingState) {
                     return Center(
                       child: Lottie.asset('assets/images/rocket.json'),
                     );
                   }
-
                   if (state is PersonErrorState) {
                     return Column(
                       children: [
@@ -129,14 +126,13 @@ class _PersonScreenState extends State<PersonScreen> {
                       ],
                     );
                   }
-
                   if (state is PersonLoadedState) {
                     return Column(
                       children: [
                         Row(
                           children: [
                             Text(
-                              'Всего персонажей: ${state.personResult.info?.count}',
+                              '${S.of(context).allCharacters}: ${state.personResult.info?.count}',
                               style: const TextStyle(
                                 color: Colors.grey,
                               ),
@@ -172,7 +168,7 @@ class _PersonScreenState extends State<PersonScreen> {
                       ],
                     );
                   }
-                  return SizedBox();
+                  return const SizedBox();
                 },
               ),
             )
@@ -206,23 +202,19 @@ class ListViewSeparatedContent extends StatelessWidget {
         }
         return InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PersonDetailScreen(
-                  personModel: personList[index],
-                ),
-              ),
+            context.push(
+              RouterConstants.personDetailScreen,
+              extra: {'personModel': personList[index]},
             );
           },
           child: Row(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(100),
+                borderRadius: BorderRadius.circular(100.r),
                 child: Image.network(
                   personList[index].image ?? '-',
-                  height: 74,
-                  width: 74,
+                  height: 74.h,
+                  width: 74.w,
                 ),
               ),
               const SizedBox(width: 18),
@@ -239,8 +231,9 @@ class ListViewSeparatedContent extends StatelessWidget {
                   ),
                   Text(
                     '${personList[index].name}',
-                    style: TextStyle(color: themeProvider.changeTextColor()),
-                    // TextHelper.w500s16white,
+                    style: TextStyle(
+                      color: themeProvider.changeTextColor(),
+                    ),
                   ),
                   Text(
                     '${statusSpeciesConverter(
@@ -248,7 +241,6 @@ class ListViewSeparatedContent extends StatelessWidget {
                     )}, ${statusGenderConverter(
                       personList[index].gender,
                     )}',
-                    style: TextHelper.w400s12grey,
                   ),
                 ],
               ),
@@ -289,13 +281,11 @@ class GridViewContent extends StatelessWidget {
         }
         return InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PersonDetailScreen(
-                  personModel: personList[index],
-                ),
-              ),
+            context.push(
+              RouterConstants.personDetailScreen,
+              extra: {
+                'personDetail': personList[index],
+              },
             );
           },
           child: Column(
@@ -304,11 +294,11 @@ class GridViewContent extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
                 child: Image.network(
                   personList[index].image ?? '-',
-                  height: 74,
-                  width: 74,
+                  height: 74.h,
+                  width: 74.w,
                 ),
               ),
-              const SizedBox(width: 18),
+              SizedBox(width: 18.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -328,7 +318,6 @@ class GridViewContent extends StatelessWidget {
                     )}, ${statusGenderConverter(
                       personList[index].gender,
                     )}',
-                    style: TextHelper.w400s12grey,
                   ),
                 ],
               ),
@@ -347,7 +336,7 @@ class CustomSpinner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5.h),
-      child: !Platform.isAndroid
+      child: Platform.isAndroid
           ? const CircularProgressIndicator()
           : CupertinoActivityIndicator(
               radius: 15.r,

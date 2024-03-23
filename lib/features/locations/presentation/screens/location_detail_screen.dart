@@ -1,9 +1,7 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:rick_morty_app/features/locations/data/model/location_model.dart';
-import 'package:rick_morty_app/features/search_screen/widgets/widgets.dart';
+import 'package:rick_morty_app/internal/components/text_helper.dart';
 
 class LocationDetailScreen extends StatefulWidget {
   final LocationModel locationModel;
@@ -59,11 +57,8 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${widget.locationModel.name}',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      widget.locationModel.name ?? '-',
+                      style: TextHelper.w700s24,
                     ),
                     Row(
                       children: [

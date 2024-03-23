@@ -8,7 +8,8 @@ import 'package:rick_morty_app/features/persons/data/model/person_model.dart';
 import 'package:rick_morty_app/features/persons/data/repository/person_repository_impl.dart';
 import 'package:rick_morty_app/features/persons/domain/use_case/person_use_case.dart';
 import 'package:rick_morty_app/features/persons/presentation/person_bloc/bloc/person_bloc.dart';
-import 'package:rick_morty_app/features/search_screen/widgets/widgets.dart';
+import 'package:rick_morty_app/internal/components/text_helper.dart';
+import 'package:rick_morty_app/internal/components/textfields.dart';
 import 'package:rick_morty_app/internal/components/theme_provider.dart';
 import 'package:rick_morty_app/internal/helpers/utils.dart';
 
@@ -55,12 +56,15 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
                   fit: BoxFit.cover,
                 ),
                 Padding(
-                  padding:
-                      EdgeInsets.only(top: 138.h, right: 114.w, left: 115.w),
+                  padding: EdgeInsets.only(
+                    top: 138.h,
+                    right: 114.w,
+                    left: 115.w,
+                  ),
                   child: CircleAvatar(
-                    radius: 73,
+                    radius: 73.r,
                     backgroundImage: NetworkImage(
-                      '${widget.personModel.image}',
+                      widget.personModel.image ?? '-',
                     ),
                   ),
                 ),
@@ -69,11 +73,11 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
           ),
           SizedBox(height: 90.h),
           Text(
-            '${widget.personModel.name}',
+            widget.personModel.name ?? '-',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: themeProvider.changeTextColor(),
-              fontSize: 34,
+              fontSize: 34.sp,
             ),
           ),
           SizedBox(height: 4.h),
@@ -100,7 +104,7 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
                   Text(
                     'Главный протагонист мультсериала «Рик и Морти». Безумный ученый, чей алкоголизм, безрассудность и социопатия заставляют беспокоиться семью его дочери.',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 13.sp,
                       color: themeProvider.changeTextColor(),
                     ),
                   ),
@@ -189,32 +193,28 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
                       Text(
                         'Эпизоды',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 20.sp,
                           fontWeight: FontWeight.w500,
                           color: themeProvider.changeTextColor(),
                         ),
                       ),
                       const Spacer(),
-                      const Text(
+                      Text(
                         'Все эпизоды',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
+                        style: TextHelper.w400s12grey,
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24.h),
                   BlocBuilder<PersonBloc, PersonState>(
                     bloc: bloc,
                     builder: (context, state) {
-                      print('state is $state');
+                      debugPrint('state is $state');
                       if (state is EpisodeLoadingState) {
                         return const Center(
                           child: CircularProgressIndicator(),
                         );
                       }
-
                       if (state is EpisodeLoadedState) {
                         return PersonEpisodeListViewSepareted(
                           personEpisodeModel: state.personEpisodeModel,
@@ -262,8 +262,8 @@ class PersonEpisodeListViewSepareted extends StatelessWidget {
           child: Row(
             children: [
               SizedBox(
-                height: 74.r,
-                width: 74.r,
+                height: 74.h,
+                width: 74.w,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.r),
                   child: Image.network(
@@ -278,10 +278,7 @@ class PersonEpisodeListViewSepareted extends StatelessWidget {
                 children: [
                   Text(
                     'Серия ${personEpisodeModel[index].id}',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      color: const Color(0xff22A2BD),
-                    ),
+                    style: TextHelper.s16blue,
                   ),
                   SizedBox(height: 2.h),
                   SizedBox(
@@ -289,17 +286,14 @@ class PersonEpisodeListViewSepareted extends StatelessWidget {
                     child: Text(
                       personEpisodeModel[index].name.toString(),
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: Colors.black,
-                      ),
+                      style: TextHelper.s16black,
                     ),
                   ),
                   SizedBox(height: 5.h),
                   Text(
                     personEpisodeModel[index].airDate.toString(),
                     style: const TextStyle(
-                      color: Color(0xff6E798C),
+                      color: Colors.grey,
                     ),
                   ),
                 ],

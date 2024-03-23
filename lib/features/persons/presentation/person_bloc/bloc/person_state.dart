@@ -22,7 +22,6 @@ final class PersonErrorState extends PersonState {
 
   PersonErrorState({required this.error});
 }
- //////////////////////////////////////////////////////////////////////////
 
 class EpisodeLoadedState extends PersonState {
   final List<EpisodeModel> personEpisodeModel;

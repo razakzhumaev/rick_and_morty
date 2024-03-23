@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rick_morty_app/features/authorization/auth_screen.dart';
+import 'package:rick_morty_app/internal/components/text_helper.dart';
 import 'package:rick_morty_app/internal/helpers/snack_bar.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
@@ -29,11 +31,11 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     super.initState();
   }
 
-    @override
-    void dispose() {
-      timer?.cancel();
-      super.dispose();
-    }
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
 
   Future<void> checkEmailVerified() async {
     await FirebaseAuth.instance.currentUser!.reload();
@@ -41,7 +43,6 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
     });
 
-    print(isEmailVerified);
     if (isEmailVerified) timer?.cancel();
   }
 
@@ -54,7 +55,6 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       await Future.delayed(const Duration(seconds: 3));
       setState(() => canResendEmail = true);
     } catch (e) {
-      print(e);
       if (mounted) {
         SnackBarService.showSnackBar(
           context,
@@ -75,22 +75,20 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
           ),
           body: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20.r),
               child: Column(
                 children: [
-                  const Text(
+                  Text(
                     'Письмо с подтверждением было отправлено на вашу электронную почту ',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
+                    style: TextHelper.s20,
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   ElevatedButton.icon(
                     onPressed: canResendEmail ? sendVerificationEmail : null,
                     icon: const Icon(Icons.email),
                     label: const Text('Повторно отправить'),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   TextButton(
                     onPressed: () async {
                       timer?.cancel();

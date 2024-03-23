@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:rick_morty_app/features/episodes/data/model/episode_model.dart';
 import 'package:rick_morty_app/features/persons/data/model/person_model.dart';
 import 'package:rick_morty_app/features/persons/domain/repository/person_repository.dart';
@@ -19,7 +20,7 @@ class PersonRepositoryImpl implements PersonRepository {
           'name': name,
         },
       );
-      print('getPersonInfo result = ${response.statusCode}');
+      debugPrint('getPersonInfo result = ${response.statusCode}');
       log('getPersonInfo result = ${response.data}');
 
       if (response.statusCode == 200) {
@@ -46,7 +47,7 @@ class PersonRepositoryImpl implements PersonRepository {
       }
       return episodeModelList;
     } catch (e) {
-      print('Error: $e');
+      debugPrint('Error: $e');
       throw CatchException.convertException(e);
     }
   }

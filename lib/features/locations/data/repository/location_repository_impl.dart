@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:rick_morty_app/features/locations/data/model/location_model.dart';
 import 'package:rick_morty_app/features/locations/domain/repository/location_repository.dart';
 import 'package:rick_morty_app/internal/helpers/api_requester.dart';
@@ -15,7 +16,7 @@ class LocationRepositoryImpl implements LocationRepository {
         'location/',
         params: {'page': page},
       );
-      print('getAllLocations == ${response.statusCode}');
+      debugPrint('getAllLocations == ${response.statusCode}');
       log('getAllLocations == ${response.data}');
       
       if (response.statusCode == 200) {

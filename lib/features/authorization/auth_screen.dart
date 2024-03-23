@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rick_morty_app/internal/components/app_routes.dart';
+import 'package:rick_morty_app/internal/components/text_helper.dart';
 import 'package:rick_morty_app/internal/helpers/snack_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -48,7 +49,7 @@ class _AuthScreenState extends State<AuthScreen> {
       prefs.setString('email', emailTextInputController.text.trim());
       prefs.setString('password', passwordTextInputController.text.trim());
     } on FirebaseAuthException catch (e) {
-      print(e.code);
+      debugPrint(e.code);
 
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
         SnackBarService.showSnackBar(
@@ -72,7 +73,6 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // resizeToAvoidBottomInset: false, // при нажатии на текстовое поле экран не будет спускаться(сдвигаться) вниз
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -103,19 +103,19 @@ class _AuthScreenState extends State<AuthScreen> {
                     children: [
                       Text(
                         'Логин',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                        ),
+                        style: TextHelper.s14,
                       ),
                       SizedBox(height: 8.h),
                       TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         autocorrect: false,
                         controller: emailTextInputController,
-                        validator: (email) =>
-                            email != null && !EmailValidator.validate(email)
-                                ? 'Введите правильный Email'
-                                : null,
+                        validator: (email) {
+                          email != null && !EmailValidator.validate(email)
+                              ? 'Введите правильный Email'
+                              : null;
+                          return null;
+                        },
                         style: const TextStyle(
                           decorationColor: Colors.green,
                         ),
@@ -125,9 +125,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             color: Colors.grey,
                           ),
                           hintText: 'Email',
-                          hintStyle: const TextStyle(
-                            fontWeight: FontWeight.w300,
-                          ),
+                          hintStyle: TextHelper.w300,
                           filled: true,
                           fillColor: Colors.grey[200],
                           enabledBorder: OutlineInputBorder(
@@ -142,18 +140,19 @@ class _AuthScreenState extends State<AuthScreen> {
                       SizedBox(height: 10.h),
                       Text(
                         'Пароль',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                        ),
+                        style: TextHelper.s14,
                       ),
                       SizedBox(height: 8.h),
                       TextFormField(
                         autocorrect: false,
                         controller: passwordTextInputController,
                         obscureText: isHiddenPassword,
-                        validator: (value) => value != null && value.length < 6
-                            ? 'Минимум 6 символов'
-                            : null,
+                        validator: (value) {
+                          value != null && value.length < 6
+                              ? 'Минимум 6 символов'
+                              : null;
+                          return null;
+                        },
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: InputDecoration(
                           suffix: InkWell(
@@ -166,7 +165,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                           ),
                           hintText: 'Пароль',
-                          hintStyle: const TextStyle(fontWeight: FontWeight.w300),
+                          hintStyle: TextHelper.w300,
                           filled: true,
                           fillColor: Colors.grey[200],
                           enabledBorder: OutlineInputBorder(
@@ -174,7 +173,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             borderRadius: BorderRadius.circular(12.r),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
                       ),
@@ -186,7 +185,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 MaterialStatePropertyAll(Colors.blue),
                           ),
                           onPressed: () {
-                            context.push('/reset_password');
+                            context.push(RouterConstants.resetPassword);
                           },
                           child: const Text('Сбросить пароль'),
                         ),

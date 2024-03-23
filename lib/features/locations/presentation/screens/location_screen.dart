@@ -3,14 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_morty_app/features/locations/data/model/location_model.dart';
 import 'package:rick_morty_app/features/locations/data/repository/location_repository_impl.dart';
 import 'package:rick_morty_app/features/locations/domain/use_case/location_use_case.dart';
 import 'package:rick_morty_app/features/locations/presentation/location_bloc/bloc/location_bloc.dart';
-import 'package:rick_morty_app/features/locations/presentation/screens/location_detail_screen.dart';
-import 'package:rick_morty_app/features/search_screen/widgets/widgets.dart';
+import 'package:rick_morty_app/internal/components/text_helper.dart';
+import 'package:rick_morty_app/internal/components/textfields.dart';
+import 'package:rick_morty_app/generated/l10n.dart';
+import 'package:rick_morty_app/internal/components/app_routes.dart';
 import 'package:rick_morty_app/internal/components/theme_provider.dart';
 
 class LocationScreen extends StatefulWidget {
@@ -104,13 +107,12 @@ class _LocationScreenState extends State<LocationScreen> {
                     child: Lottie.asset('assets/images/rocket.json'),
                   );
                 }
-
                 if (state is LocationLoadedState) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Всего локаций: ${state.locationResult.info?.count}',
+                        '${S.of(context).allLocations}: ${state.locationResult.info?.count}',
                         style: const TextStyle(
                           color: Colors.grey,
                         ),
@@ -159,13 +161,11 @@ class ListViewSeparetedContent extends StatelessWidget {
         }
         return InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (contex) => LocationDetailScreen(
-                  locationModel: locationList[index],
-                ),
-              ),
+            context.push(
+              RouterConstants.locationDetailScreen,
+              extra: {
+                'locationModel': locationList[index],
+              },
             );
           },
           child: ClipRRect(
@@ -192,7 +192,7 @@ class ListViewSeparetedContent extends StatelessWidget {
                         Text(
                           locationList[index].name ?? '-',
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 20.sp,
                             fontWeight: FontWeight.w500,
                             color: themeProvider.changeTextColor(),
                           ),
@@ -235,7 +235,7 @@ class CustomSpinner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5.h),
-      child: !Platform.isAndroid
+      child: Platform.isAndroid
           ? const CircularProgressIndicator()
           : CupertinoActivityIndicator(
               radius: 15.r,

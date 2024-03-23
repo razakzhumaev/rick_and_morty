@@ -1,7 +1,8 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rick_morty_app/internal/components/theme_provider.dart';
+import 'package:rick_morty_app/internal/helpers/localization/bloc/global_localization_bloc.dart';
 
 class RegistrationTextField extends StatefulWidget {
   final String hintText;
@@ -49,7 +50,7 @@ class _RegistrationTextFieldState extends State<RegistrationTextField> {
           borderRadius: BorderRadius.circular(12.r),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10.r),
           borderSide: const BorderSide(color: Colors.blue),
         ),
       ),
@@ -60,13 +61,11 @@ class _RegistrationTextFieldState extends State<RegistrationTextField> {
 class SearchTextField extends StatelessWidget {
   final ThemeProvider themeProvider;
   final String hintText;
-  final Widget? suffixIcon;
   final ValueChanged<String> onChanged;
 
   const SearchTextField({
     Key? key,
     required this.hintText,
-    this.suffixIcon,
     required this.onChanged,
     required this.themeProvider,
   }) : super(key: key);
@@ -76,17 +75,30 @@ class SearchTextField extends StatelessWidget {
     return TextField(
       onChanged: onChanged,
       decoration: InputDecoration(
-
         prefixIcon: const Icon(
           Icons.search,
           color: Colors.grey,
         ),
         hintText: hintText,
-        suffixIcon: suffixIcon,
-        hintStyle: TextStyle(
-          fontWeight: FontWeight.w300,
-          color: themeProvider.changeTextColor()
+        suffixIcon: Column(
+          children: [
+            InkWell(
+              onTap: () => context.read<GlobalLocalizationBloc>().add(
+                    ChangeLocaleEvent(locale: 'en'),
+                  ),
+              child: const Icon(Icons.language),
+            ),
+            InkWell(
+              onTap: () => context.read<GlobalLocalizationBloc>().add(
+                    ChangeLocaleEvent(locale: 'ru'),
+                  ),
+              child: const Icon(Icons.language),
+            ),
+          ],
         ),
+        hintStyle: TextStyle(
+            fontWeight: FontWeight.w300,
+            color: themeProvider.changeTextColor()),
         filled: true,
         fillColor: themeProvider.changeTextFieldColor(),
         enabledBorder: OutlineInputBorder(
@@ -96,7 +108,7 @@ class SearchTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.r),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10.r),
           borderSide: const BorderSide(
             color: Colors.blue,
           ),
@@ -130,7 +142,7 @@ class TextFieldSnp extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.r),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10.r),
           borderSide: const BorderSide(
             color: Colors.blue,
           ),
@@ -138,18 +150,4 @@ class TextFieldSnp extends StatelessWidget {
       ),
     );
   }
-}
-
-abstract class TextHelper {
-  static TextStyle w500s16white = const TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w500,
-    color: Colors.white,
-  );
-  static TextStyle w400s12grey =
-      const TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.grey);
-  static TextStyle w500s10green = const TextStyle(
-    fontSize: 10,
-    fontWeight: FontWeight.w500,
-  );
 }

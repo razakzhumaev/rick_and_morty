@@ -1,10 +1,9 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:rick_morty_app/internal/components/text_helper.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-
 import 'package:rick_morty_app/features/episodes/data/model/episode_model.dart';
 import 'package:rick_morty_app/internal/components/theme_provider.dart';
 
@@ -80,8 +79,8 @@ class _EpisodeDetailScreenState extends State<EpisodeDetailScreen> {
                                 children: [
                                   Lottie.asset(
                                     'assets/images/nlo.json',
-                                    height: 300,
-                                    width: 300,
+                                    height: 300.h,
+                                    width: 300.w,
                                   ),
                                   YoutubePlayer(
                                     controller: youtubePlayerController,
@@ -99,7 +98,7 @@ class _EpisodeDetailScreenState extends State<EpisodeDetailScreen> {
                 );
               },
               child: CircleAvatar(
-                radius: 50,
+                radius: 50.r,
                 backgroundColor: Colors.blue[400],
                 child: const Icon(
                   Icons.play_arrow,
@@ -129,9 +128,9 @@ class ContainerContent extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: themeProvider.changeContainerColor(),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(35),
-          topRight: Radius.circular(35),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(35.r),
+          topRight: Radius.circular(35.r),
         ),
       ),
       height: 561.h,
@@ -145,17 +144,17 @@ class ContainerContent extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              '${widget.episodeModel.name}',
+              widget.episodeModel.name ?? '-',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 24.sp,
                 fontWeight: FontWeight.w700,
                 color: themeProvider.changeTextColor(),
               ),
             ),
             Text(
               'СЕРИЯ ${widget.episodeModel.id}',
-              style: const TextStyle(
-                fontSize: 10,
+              style: TextStyle(
+                fontSize: 10.sp,
                 color: Colors.blue,
               ),
             ),
@@ -172,12 +171,9 @@ class ContainerContent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Премьера',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12,
-                    ),
+                    style: TextHelper.w400s12grey,
                   ),
                   Text(
                     widget.episodeModel.airDate ?? '-',

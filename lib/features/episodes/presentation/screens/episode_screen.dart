@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_morty_app/features/episodes/data/model/episode_model.dart';
 import 'package:rick_morty_app/features/episodes/data/repository/episode_repository_impl.dart';
 import 'package:rick_morty_app/features/episodes/domain/use_case/episode_use_case.dart';
 import 'package:rick_morty_app/features/episodes/presentation/episode/bloc/episode_bloc.dart';
-import 'package:rick_morty_app/features/episodes/presentation/screens/episode_detail_screen.dart';
 import 'package:rick_morty_app/features/locations/presentation/screens/location_screen.dart';
-import 'package:rick_morty_app/features/search_screen/widgets/widgets.dart';
+import 'package:rick_morty_app/internal/components/textfields.dart';
+import 'package:rick_morty_app/internal/components/app_routes.dart';
 import 'package:rick_morty_app/internal/components/theme_provider.dart';
 
 class EpisodeSreen extends StatefulWidget {
@@ -158,24 +159,22 @@ class ListViewSeparetedContent extends StatelessWidget {
         }
         return InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EpisodeDetailScreen(
-                  episodeModel: episodeList[index],
-                ),
-              ),
+            context.push(
+              RouterConstants.episodeDetailScreen,
+              extra: {
+                'episodeModel': episodeList[index],
+              },
             );
           },
           child: Row(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(10.r),
                 child: Image.asset(
                   episodeList[index].imageUrl ?? '-',
-                  height: 70,
+                  height: 70.h,
                   fit: BoxFit.cover,
-                  width: 70,
+                  width: 70.w,
                 ),
               ),
               SizedBox(width: 16.w),

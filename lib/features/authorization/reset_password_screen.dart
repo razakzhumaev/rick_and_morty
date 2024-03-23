@@ -1,7 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rick_morty_app/internal/components/app_routes.dart';
 import 'package:rick_morty_app/internal/helpers/snack_bar.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -18,12 +20,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   void dispose() {
     emailTextInputController.dispose();
-
     super.dispose();
   }
 
   Future<void> resetPassword() async {
-    // final navigator = Navigator.of(context);
     final scaffoldMassager = ScaffoldMessenger.of(context);
 
     final isValid = formKey.currentState!.validate();
@@ -59,7 +59,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
     scaffoldMassager.showSnackBar(snackBar);
 
-    context.push('/splash2/stream/auth/');
+    context.go(RouterConstants.auth);
   }
 
   @override
@@ -70,7 +70,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         title: const Text('Сброс пароля'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(30.0),
+        padding: EdgeInsets.all(30.0.r),
         child: Form(
           key: formKey,
           child: Column(
@@ -79,19 +79,22 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 keyboardType: TextInputType.emailAddress,
                 autocorrect: false,
                 controller: emailTextInputController,
-                validator: (email) =>
-                    email != null && !EmailValidator.validate(email)
-                        ? 'Введите правильный Email'
-                        : null,
+                validator: (email) {
+                  email != null && !EmailValidator.validate(email)
+                      ? 'Введите правильный Email'
+                      : null;
+                },
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Введите Email',
                 ),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: 30.h),
               ElevatedButton(
                 onPressed: resetPassword,
-                child: const Center(child: Text('Сбросить пароль')),
+                child: const Center(
+                  child: Text('Сбросить пароль'),
+                ),
               ),
             ],
           ),

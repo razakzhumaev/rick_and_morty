@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_morty_app/internal/components/app_routes.dart';
-import 'package:rick_morty_app/features/settings/changesnp_screen.dart';
+import 'package:rick_morty_app/internal/components/text_helper.dart';
 import 'package:rick_morty_app/internal/components/theme_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,6 +30,8 @@ class _EdittingScreenState extends State<EdittingScreen> {
 
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 
   Future<void> loadUserInfo() async {
@@ -54,7 +56,10 @@ class _EdittingScreenState extends State<EdittingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProvider>(
+      context,
+      listen: false,
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -86,28 +91,25 @@ class _EdittingScreenState extends State<EdittingScreen> {
                       children: [
                         _imageFile != null
                             ? ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
+                                borderRadius: BorderRadius.circular(100.r),
                                 child: Image.file(
                                   _imageFile!,
-                                  width: 200,
-                                  height: 200,
+                                  width: 200.w,
+                                  height: 200.h,
                                   fit: BoxFit.cover,
                                 ),
                               )
                             : ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
+                                borderRadius: BorderRadius.circular(100.r),
                                 child: Image.network(
                                   'https://elomsk.ru/uploads/images/shop/products/items/item_589065c6-44f8-11eb-a205-002590e40525.jpg',
-                                  height: 200,
-                                  width: 200,
+                                  height: 200.h,
+                                  width: 200.w,
                                 ),
                               ),
-                        const Text(
+                        Text(
                           'Изменить фото',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 16,
-                          ),
+                          style: TextHelper.s16blue,
                         ),
                       ],
                     ),
@@ -136,14 +138,14 @@ class _EdittingScreenState extends State<EdittingScreen> {
                           Text(
                             'email',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 16.sp,
                               color: themeProvider.changeTextColor(),
                             ),
                           ),
                           Row(
                             children: [
                               Text(
-                                '$email ',
+                                email,
                                 style: const TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -153,27 +155,13 @@ class _EdittingScreenState extends State<EdittingScreen> {
                         ],
                       ),
                       const Spacer(),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChangeSnpScreen(
-                                email: email,
-                                password: password,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: themeProvider.changeTextColor(),
-                        ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: themeProvider.changeTextColor(),
                       )
                     ],
                   ),
-                  SizedBox(height: 20.h),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 40.h),
                   Row(
                     children: [
                       Column(
@@ -182,11 +170,16 @@ class _EdittingScreenState extends State<EdittingScreen> {
                           Text(
                             'Пароль',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 16.sp,
                               color: themeProvider.changeTextColor(),
                             ),
                           ),
-                          const Text(''),
+                          Text(
+                            password,
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
                         ],
                       ),
                       const Spacer(),
@@ -202,19 +195,22 @@ class _EdittingScreenState extends State<EdittingScreen> {
                       signOut();
                       context.go(RouterConstants.auth);
                     },
-                    child: const Text(
-                      'Выйти',
-                      style: TextStyle(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      minimumSize: Size(
+                        150.w,
+                        50.h,
+                      ),
+                      backgroundColor: themeProvider.changeContainerColor(),
+                      side: const BorderSide(
                         color: Colors.blue,
                       ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      minimumSize: Size(150.w, 50.h),
-                      backgroundColor: themeProvider.changeContainerColor(),
-                      side: const BorderSide(
+                    child: const Text(
+                      'Выйти',
+                      style: TextStyle(
                         color: Colors.blue,
                       ),
                     ),
